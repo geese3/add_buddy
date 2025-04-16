@@ -1,0 +1,6 @@
+PyQt5==5.15.9
+selenium==4.15.2
+undetected-chromedriver==3.5.3
+python-dotenv==1.0.0
+pyperclip==1.8.2
+pyinstaller==6.1.0 
