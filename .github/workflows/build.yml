@@ -20,7 +20,6 @@ jobs:
       - name: Debug - List files
         run: |
           ls -la
-          ls -la auto_naver/
 
       - name: Install dependencies
         run: |
@@ -35,7 +34,7 @@ jobs:
 
       - name: Build executable
         run: |
-          pyinstaller --onefile --windowed --name "네이버블로그이웃추가" auto_naver/auto_neighbor_gui.py
+          pyinstaller --onefile --windowed --name "네이버블로그이웃추가" auto_neighbor_gui.py
           ls -la dist/
 
       - name: Upload artifact
