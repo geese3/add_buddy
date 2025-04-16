@@ -17,6 +17,11 @@ jobs:
         with:
           python-version: "3.9"
 
+      - name: Debug - List files
+        run: |
+          ls -la
+          ls -la auto_naver/
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -26,10 +31,12 @@ jobs:
           pip install undetected-chromedriver
           pip install python-dotenv
           pip install pyperclip
+          pip list
 
       - name: Build executable
         run: |
           pyinstaller --onefile --windowed --name "네이버블로그이웃추가" auto_naver/auto_neighbor_gui.py
+          ls -la dist/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
