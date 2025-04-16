@@ -32,7 +32,7 @@ jobs:
           pyinstaller --onefile --windowed --name "네이버블로그이웃추가" auto_naver/auto_neighbor_gui.py
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: 네이버블로그이웃추가
           path: dist/네이버블로그이웃추가.exe
