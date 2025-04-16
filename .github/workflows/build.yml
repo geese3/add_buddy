@@ -19,7 +19,7 @@ jobs:
 
       - name: Debug - List files
         run: |
-          ls -la
+          dir
 
       - name: Install dependencies
         run: |
@@ -35,7 +35,7 @@ jobs:
       - name: Build executable
         run: |
           pyinstaller --onefile --windowed --name "네이버블로그이웃추가" auto_neighbor_gui.py
-          ls -la dist/
+          dir dist
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
