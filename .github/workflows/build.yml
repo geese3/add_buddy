@@ -34,11 +34,11 @@ jobs:
 
       - name: Build executable
         run: |
-          pyinstaller --onefile --windowed --name "네이버블로그이웃추가" auto_neighbor_gui.py
+          pyinstaller --onefile --windowed --name "naver_blog_buddy" auto_neighbor_gui.py
           dir dist
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: 네이버블로그이웃추가
-          path: dist/네이버블로그이웃추가.exe
+          name: naver_blog_buddy
+          path: dist/naver_blog_buddy.exe
