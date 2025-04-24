@@ -11,12 +11,12 @@ import json
 import urllib.request
 import random
 from datetime import datetime
-import undetected_chromedriver as uc  # 추가된 부분
+import undetected_chromedriver as uc  
 import pyperclip
-import platform  # 운영체제 확인을 위해 추가
+import platform  
 
 class NaverBlogAutomation:
-    def __init__(self):
+    def __init__(self, log_callback=None):
         # OS 확인
         self.is_mac = platform.system() == 'Darwin'
         
@@ -25,6 +25,7 @@ class NaverBlogAutomation:
         chrome_options.add_argument('--disable-popup-blocking')
         chrome_options.add_argument('--disable-blink-features=AutomationControlled')
         chrome_options.add_argument('--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1')
+        # chrome_options.add_argument('--headless')  # headless 모드 항상 사용
         
         self.driver = uc.Chrome(options=chrome_options)
         self.wait = WebDriverWait(self.driver, 10)
@@ -34,15 +35,21 @@ class NaverBlogAutomation:
         
         # 로그 파일 설정
         self.log_file = f"neighbor_log_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
-        
+        self.log_callback = log_callback
+
     def log_activity(self, message):
         """활동 로그를 파일에 저장"""
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         log_message = f"[{timestamp}] {message}\n"
         
-        print(log_message.strip())  # 콘솔 출력
+        # 파일에도 저장
         with open(self.log_file, 'a', encoding='utf-8') as f:
             f.write(log_message)
+        # 콜백이 있으면 GUI로도 전달
+        if self.log_callback:
+            self.log_callback(message)
+        # print도 유지(필요시)
+        print(log_message.strip())  # 콘솔 출력
 
     def search_blogs(self, keyword, display=100):
         """네이버 검색 API를 사용하여 블로그 검색"""
@@ -116,14 +123,12 @@ class NaverBlogAutomation:
                     self.log_activity("로그인 실패: 보안 문제 발생")
                     print("\n[알림] 캡차나 보안 문제가 발생했습니다.")
                     print("브라우저에서 직접 로그인을 진행해주세요.")
-                    print("로그인이 완료되면 아무 키나 눌러주세요...")
-                    input()
+                    time.sleep(10)  # 10초 대기 후 자동 진행(필요시 조정)
             except Exception as e:
                 self.log_activity(f"로그인 상태 확인 중 오류: {str(e)}")
                 print("\n[알림] 로그인 상태 확인 중 문제가 발생했습니다.")
                 print("브라우저에서 직접 로그인을 진행해주세요.")
-                print("로그인이 완료되면 아무 키나 눌러주세요...")
-                input()
+                time.sleep(10)
             
             self.log_activity("로그인 성공")
             
@@ -131,8 +136,7 @@ class NaverBlogAutomation:
             self.log_activity(f"로그인 실패: {str(e)}")
             print("\n[알림] 자동 로그인 실패")
             print("브라우저에서 직접 로그인을 진행해주세요.")
-            print("로그인이 완료되면 아무 키나 눌러주세요...")
-            input()
+            time.sleep(10)
             self.log_activity("수동 로그인 완료")
 
     def is_already_neighbor(self):
@@ -264,27 +268,26 @@ def main():
     
     bot = None
     try:
-        naver_id = input("네이버 아이디를 입력하세요: ")
-        naver_pw = input("네이버 비밀번호를 입력하세요: ")
-        keyword = input("검색할 키워드를 입력하세요: ")
-        max_blogs = int(input("최대 몇 개의 블로그와 이웃을 맺을까요? (기본: 50): ") or "50")
-        message = input("이웃추가 메시지를 입력하세요 (기본: 안녕하세요. 관심사가 비슷한 것 같아 서로이웃 신청드립니다. 앞으로 함께 성장해나가면 좋겠습니다.): ") or "안녕하세요. 관심사가 비슷한 것 같아 서로이웃 신청드립니다. 앞으로 함께 성장해나가면 좋겠습니다."
+        print("[main 함수는 GUI 환경에서는 사용되지 않습니다]")
+        return
         
-        bot = NaverBlogAutomation()
+        # 아래는 CLI 테스트용 코드(주석 처리)
+        # naver_id = input("네이버 아이디를 입력하세요: ")
+        # naver_pw = input("네이버 비밀번호를 입력하세요: ")
+        # keyword = input("검색할 키워드를 입력하세요: ")
+        # max_blogs = int(input("최대 몇 개의 블로그와 이웃을 맺을까요? (기본: 50): ") or "50")
+        # message = input("이웃추가 메시지를 입력하세요 (기본: ...): ") or "..."
         
-        # 네이버 로그인
-        bot.login_naver(naver_id, naver_pw)
-        
-        # 키워드로 블로그 검색 및 이웃 추가 진행
-        bot.process_keyword(keyword, max_blogs, message)
+        # bot = NaverBlogAutomation()
+        # bot.login_naver(naver_id, naver_pw)
+        # bot.process_keyword(keyword, max_blogs, message)
         
     except KeyboardInterrupt:
         print("\n프로그램을 종료합니다...")
     except Exception as e:
         print(f"프로그램 실행 중 오류 발생: {str(e)}")
     finally:
-        if bot:
-            bot.close()
+        pass
 
 if __name__ == "__main__":
-    main() 
+    main()

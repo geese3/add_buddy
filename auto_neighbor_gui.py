@@ -53,7 +53,7 @@ class WorkerThread(QThread):
 
     def run(self):
         try:
-            bot = NaverBlogAutomation()
+            bot = NaverBlogAutomation(log_callback=self.emit_log)
             bot.client_id = self.client_id
             bot.client_secret = self.client_secret
             
@@ -69,6 +69,9 @@ class WorkerThread(QThread):
             if 'bot' in locals():
                 bot.close()
             self.finished_signal.emit()
+
+    def emit_log(self, message):
+        self.log_signal.emit(message)
 
 class MainWindow(QMainWindow):
     def __init__(self):
